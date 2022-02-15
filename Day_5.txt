@@ -1,0 +1,401 @@
+Program 1:
+
+public class Example_Class implements Runnable {  
+  
+    @Override  
+    public void run() {  
+        System.out.println("Table of 2");
+	for(int i=1;i<=10;i++)
+	{
+		System.out.print(2*i+ " ");
+	}  
+    }  
+   
+    public static void main(String[] args) {  
+        Example_Class ex = new Example_Class();  
+        Thread t1= new Thread(ex);  
+        t1.start();  
+        System.out.println("Hi");  
+    }  
+}
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Program 2:
+
+public class Example_Class2 extends Thread {  
+	String str;
+	Example_Class2(String str)
+	{
+		this.str=str;
+	}
+  
+    @Override  
+    public void run() {  
+	for(int i=1;i<5;i++)
+		{
+		System.out.println(str+ " " +i);
+		}   	
+    }  
+   
+    public static void main(String[] args) {  
+        Example_Class2 ex = new Example_Class2("First Thread:"); 
+	Example_Class2 ex2 = new Example_Class2("Second Thread"); 
+        Thread t1= new Thread(ex);  
+	Thread t2= new Thread(ex2);  
+        t1.start();  
+	t2.start();
+ 
+    }  
+}
+
+---------------------------------------------------------------------------------------------------------------
+
+Program 3:
+
+public class producerconsumer
+{
+	public static void main(String[] args)
+	{
+		Shop c=new Shop();
+		Producer p1=new Producer(c,1);
+		Consumer c1=new Consumer(c,1);
+		p1.start();
+		c1.start();
+}
+}
+
+class Shop
+{
+	private int materials;
+	private boolean available=false;
+	public synchronized int get()
+	{
+		while(available==false)
+		{
+			try
+			{
+				wait();
+			}
+			catch(InterruptedException ie)
+			{}
+		}
+		available=false;
+		notifyAll();
+		return materials;
+	}
+	public synchronized void put(int value)
+	{
+		while(available==true)
+		{
+		try
+		{
+			wait();
+		}
+		catch(InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
+		}
+		materials=value;
+		available=true;
+		notifyAll();
+	}
+}
+
+class Consumer extends Thread
+{
+	private Shop Shop;
+	private int number;
+	public Consumer(Shop c,int number)
+	{
+		Shop=c;
+		this.number=number;
+	}
+	public void run()
+	{
+		int value=0;
+		for(int i=0;i<10;i++)
+		{
+			value=Shop.get();
+			System.out.println("Consumed value" + this.number + " got: " +value);
+		}
+	}
+}
+
+class Producer extends Thread
+{
+	private Shop Shop;
+	private int number;
+	public Producer(Shop c,int number)
+	{
+		Shop=c;
+		this.number=number;
+	}
+	public void run()
+	{
+		for(int i=0;i<10;i++)
+		{
+			Shop.put(i);
+			System.out.println("Produced value " + this.number + " put: " +i);
+		try
+		{
+			sleep((int)(Math.random()*100));
+		}
+		catch(InterruptedException ie)
+		{
+			ie.printStackTrace();
+		}
+		}
+	}
+}
+
+
+----------------------------------------------------------------------------------------------------------------
+
+Program 4:
+
+public class Example_Class4 extends Thread {  
+	
+  
+    @Override  
+    public void run() { 
+	String threadname=Thread.currentThread().getName();
+	Integer threadpriority=Thread.currentThread().getPriority();
+	System.out.println(threadname + " has priority " +threadpriority);
+	for(int i=1;i<5;i++)
+		{
+		System.out.println(2*i);
+		}   	
+    }  
+   
+    public static void main(String[] args) {  
+        Example_Class4 ex = new Example_Class4(); 
+	Example_Class4 ex2 = new Example_Class4(); 
+        Thread t1= new Thread(ex);  
+	Thread t2= new Thread(ex2);  
+	t1.setPriority(Thread.MIN_PRIORITY);
+	t2.setPriority(Thread.MAX_PRIORITY);
+        t1.start();  
+	t2.start();
+ 
+    }  
+}
+
+----------------------------------------------------------------------------------------------------------------------------------
+
+Program 5:
+
+public class Example_Class5 extends Thread {  
+	String str;
+	Example_Class5(String str)
+	{
+		this.str=str;
+	}
+  
+    @Override  
+    public void run() { 
+	System.out.println("Running Thread: " + Thread.currentThread().getName());
+	try{
+	Thread.sleep(5000);
+	}
+	catch(Exception e){} 
+	for(int i=1;i<5;i++)
+		{
+		System.out.println(str+ " " +i);
+		}   	
+    }  
+   
+    public static void main(String[] args) {  
+        Example_Class5 ex = new Example_Class5("First Thread:"); 
+	Example_Class5 ex2 = new Example_Class5("Second Thread"); 
+        Thread t1= new Thread(ex);  
+	Thread t2= new Thread(ex2);  
+        t1.start();  
+	t2.start();
+ 
+    }  
+}
+
+----------------------------------------------------------------------------------------------------------------------------------
+Program 6:
+
+class table
+{
+	public synchronized void printtable(int n)
+	{
+		for(int i=1;i<=5;i++)
+		{
+			System.out.println(n*i);
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch(Exception e){System.out.println(e);}
+		}
+	}
+}
+class MyThread1 extends Thread {  
+	table t;
+	MyThread1(table t)
+	{
+		this.t=t;
+	}
+  
+    @Override  
+    public void run() { 
+	t.printtable(5);	
+    } 
+}
+class MyThread2 extends Thread {  
+	table t;
+	MyThread2(table t)
+	{
+		this.t=t;
+	}
+  
+    @Override  
+    public void run() { 
+	t.printtable(10);	
+    } 
+}
+public class Example_Class6 
+{
+    public static void main(String[] args)
+    {  
+	table t=new table();
+        MyThread1 t1 = new MyThread1(t); 
+	 MyThread2 t2 = new MyThread2(t);  
+        t1.start();  
+	t2.start();
+    }  
+}
+
+---------------------------------------------------------------------------------------------------------------------------
+Program 7:
+
+
+class MyThread1 extends Thread {  
+	String msg="";
+	MyThread1(String msg)
+	{
+		this.msg=msg;
+	}
+  
+    @Override  
+    public void run() { 
+	try
+	{
+		while(true)
+		{
+			System.out.println(msg);
+			Thread.sleep(300);
+		}
+	}
+	catch(Exception e)
+	{
+		e.printStackTrace();
+	}
+    } 
+}
+
+public class Example_Class7 
+{
+    public static void main(String[] args)
+    {  
+        MyThread1 t1 = new MyThread1("Running thread1..");   
+        t1.start();  
+    }  
+}
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+Program 8:
+
+import java.io.*;
+import java.util.Scanner;
+class Example_Program8
+{
+	static void fibonacci(int n)
+	{
+	int a[]=new int[n];
+	a[0]=0;
+	a[1]=1;
+	for(int i=2;i<n;i++)
+	{
+		a[i]=a[i-2]+a[i-1];
+	}
+	System.out.println("Fibonacci series:");
+	for(int i=0;i<n;i++)
+	{
+		System.out.print(a[i] + " ");
+	}
+	System.out.println("");
+	System.out.println("Reverse Fibonacci series:");
+	for(int i=n-1;i>=0;i--)
+	{
+		System.out.print(a[i] + " ");
+	}
+	}
+	public static void main(String[] args)
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.println("Enter the limit for series:");
+		int n=sc.nextInt();
+		fibonacci(n);
+	}
+}
+
+-------------------------------------------------------------------------------------------------------------------------------------
+Program 9:
+
+class table
+{
+	public synchronized void printtable(int n)
+	{
+		for(int i=1;i<=5;i++)
+		{
+			System.out.println(n*i);
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch(Exception e){System.out.println(e);}
+		}
+	}
+}
+class MyThread1 extends Thread {  
+	table t;
+	MyThread1(table t)
+	{
+		this.t=t;
+	}
+  
+    @Override  
+    public void run() { 
+	t.printtable(5);	
+    } 
+}
+class MyThread2 extends Thread {  
+	table t;
+	MyThread2(table t)
+	{
+		this.t=t;
+	}
+  
+    @Override  
+    public void run() { 
+	t.printtable(10);	
+    } 
+}
+public class Example_Class6 
+{
+    public static void main(String[] args)
+    {  
+	table t=new table();
+        MyThread1 t1 = new MyThread1(t); 
+	 MyThread2 t2 = new MyThread2(t);  
+        t1.start();  
+	t2.start();
+    }  
+}
