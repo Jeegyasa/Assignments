@@ -1,0 +1,1177 @@
+1.
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 9:48:00 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <a href="test.jsp">View Current Date and Time</a>
+    </body>
+</html>
+
+//test.jsp
+
+<%-- 
+    Document   : test
+    Created on : 23-Feb-2022, 9:49:00 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+                <form>
+            <fieldset style="width:20%; background-color: #ccffeb;">
+                <legend><b><i>JSP Application<i><b></legend>
+                <h3>Current Date and Time is :</h3>
+                <% java.util.Date d = new java.util.Date();
+                out.println(d.toString()); %>
+            </fieldset>
+                </form><!-- comment -->
+    </body>
+</html>
+------------------------------------------------------------------------------------------------------
+
+2.
+//index.html
+<html>
+    <head>
+        <title>File Uploading Form</title>
+    </head>
+    <body>
+        <form action="upload.jsp" method="post" enctype="multipart/form-data">
+            <fieldset style="width:20%; background-color: #e6ff99">
+                <h2>File Upload Example</h2>
+                <hr>
+                Select a file to upload: <br /><br />
+                <input type="file" name="file" size="50" />
+                <br /><br />
+                <input type="submit" value="Upload File" />
+            </fieldset>
+        </form>
+    </body>
+</html>
+
+//upload.jsp
+
+<%@ page import="java.io.*,java.util.*, javax.servlet.*" %>
+<%@ page import="javax.servlet.http.*" %>
+<%@ page import="org.apache.commons.fileupload.*" %>
+<%@ page import="org.apache.commons.fileupload.disk.*" %>
+<%@ page import="org.apache.commons.fileupload.servlet.*" %>
+<%@ page import="org.apache.commons.io.output.*" %>
+
+<%
+    File file ;
+    int maxFileSize = 5000 * 1024;
+    int maxMemSize = 5000 * 1024;
+    ServletContext context = pageContext.getServletContext();
+    String filePath = context.getInitParameter("file-upload");
+
+    // Verify the content type
+    String contentType = request.getContentType();
+    if ((contentType.indexOf("multipart/form-data") >= 0))
+    {
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        factory.setSizeThreshold(maxMemSize);
+        // Location to save data that is larger than maxMemSize.
+        factory.setRepository(new File("D:\\temp"));
+
+        // Create a new file upload handler
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        // maximum file size to be uploaded.
+        upload.setSizeMax( maxFileSize );
+        try
+        {
+             // Parse the request to get file items.
+             List fileItems = upload.parseRequest(request);
+
+             // Process the uploaded file items
+             Iterator i = fileItems.iterator();
+
+             out.println("<html>");
+             out.println("<head>");
+             out.println("<title>JSP File upload</title>");  
+             out.println("</head>");
+             out.println("<body>");
+             while ( i.hasNext () )
+             {
+                FileItem fi = (FileItem)i.next();
+                if ( !fi.isFormField () )
+                {
+                    // Get the uploaded file parameters
+                    String fieldName = fi.getFieldName();
+                    String fileName = fi.getName();
+                    boolean isInMemory = fi.isInMemory();
+                    long sizeInBytes = fi.getSize();
+                    // Write the file
+                    if( fileName.lastIndexOf("\\") >= 0 )
+                    {
+                        file = new File( filePath +
+                        fileName.substring( fileName.lastIndexOf("\\"))) ;
+                    }
+                    else
+                    {
+                        file = new File( filePath +
+                        fileName.substring(fileName.lastIndexOf("\\")+1)) ;
+                    }
+                    fi.write( file ) ;
+                    out.println("Uploaded Filename: " + filePath +
+                    fileName + "<br>");
+                }
+            }
+            out.println("</body>");
+            out.println("</html>");
+        }
+        catch(Exception ex)
+        {
+            System.out.println(ex);
+        }
+    }
+    else
+    {
+        out.println("<html>");
+        out.println("<head>");
+        out.println("<title>Servlet upload</title>");  
+        out.println("</head>");
+        out.println("<body>");
+        out.println("<p>No file uploaded</p>");
+        out.println("</body>");
+        out.println("</html>");
+    }
+%>
+
+---------------------------------------------------------------------------------------------------------------------
+
+3.
+
+//auto-refresh.jsp
+
+<%-- 
+    Document   : test
+    Created on : 23-Feb-2022, 9:49:00 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+                <form>
+            <fieldset style="width:20%; background-color: #ccffeb;">
+                <legend><b><i>JSP Application<i><b></legend>
+                <h3>Current Date and Time is :</h3>
+                <% java.util.Date d = new java.util.Date();
+                out.println(d.toString()); %>
+            </fieldset>
+                </form><!-- comment -->
+    </body>
+</html>
+
+
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 9:51:16 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <a href="auto-refresh.jsp">Refresh</a>
+    </body>
+</html>
+------------------------------------------------------------------------------------------
+
+4.
+//count-visitor.jsp
+
+<%-- 
+    Document   : count-visitor
+    Created on : 23-Feb-2022, 9:55:45 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.*" %>
+<html>
+    <head>
+        <title>Count visitor</title>
+    </head>
+    <body>
+        <form>
+            <fieldset style="width:20%; background-color:#e6ffe6;">
+                <legend>Count visitor</legend>
+                <%
+                    Integer hitsCount =
+                    (Integer)application.getAttribute("hitCounter");
+                    if( hitsCount ==null || hitsCount == 0 )
+                    {
+                        /* First visit */
+                        out.println("Welcome to my website!!");
+                        hitsCount = 1;
+                    }
+                    else
+                    {
+                        /* return visit */
+                        out.println("Welcome to my website!!");
+                        hitsCount += 1;
+                    }
+                    application.setAttribute("hitCounter", hitsCount);
+                %>
+                <p>You are visitor number: <%= hitsCount%></p>
+            </fieldset>
+        </form>
+    </body>
+</html>
+
+
+//index.jsp
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 9:55:32 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+         <a href="count-visitor.jsp">Count Visitors</a>
+    </body>
+</html>
+----------------------------------------------------------------------------------------
+5.
+
+<%@ page import="java.io.*,java.util.*" %>
+<%
+   // Get session creation time.
+   Date createTime = new Date(session.getCreationTime());
+   // Get last access time of this web page.
+   Date lastAccessTime = new Date(session.getLastAccessedTime());
+
+   String title = "Welcome Back to my website";
+   Integer visitCount = new Integer(0);
+   String visitCountKey = new String("visitCount");
+   String userIDKey = new String("userID");
+   String userID = new String("Surendra");
+
+   // Check if this is new comer on your web page.
+   if (session.isNew())
+   {
+      title = "Welcome to my website";
+      session.setAttribute(userIDKey, userID);
+      session.setAttribute(visitCountKey,  visitCount);
+   }
+   visitCount = (Integer)session.getAttribute(visitCountKey);
+   visitCount = visitCount + 1;
+   userID = (String)session.getAttribute(userIDKey);
+   session.setAttribute(visitCountKey,  visitCount);
+%>
+<html>
+    <head>
+        <title>Session Tracking</title>
+    </head>
+    <body>
+        <center>
+            <h1>Session Tracking Example</h1>
+        </center>
+        <table border="1" align="center">
+            <tr bgcolor="#ffcccc">
+                <th>Session info</th>
+                <th>Value</th>
+            </tr>
+            <tr >
+                <td>id</td>
+                <td><% out.print( session.getId()); %></td>
+            </tr>
+            <tr>
+                <td>Creation Time</td>
+                <td><% out.print(createTime); %></td>
+            </tr>
+            <tr>
+                <td>Time of Last Access</td>
+                <td><% out.print(lastAccessTime); %></td>
+            </tr>
+            <tr>
+                <td>User ID</td>
+                <td><% out.print(userID); %></td>
+            </tr>
+            <tr>
+                <td>Number of visits</td>
+                <td><% out.print(visitCount); %></td>
+            </tr>
+        </table>
+    </body>
+</html>
+
+-----------------------------------------------------------------------------------------------------------
+6.
+//error.jsp
+
+<%-- 
+    Document   : error
+    Created on : 23-Feb-2022, 5:06:11 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page isErrorPage="true"%>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <h2>Sorry an exception occured</h2>
+        Exception is <%=exception%>
+        <%=request.getParameter("data")%>
+    </body>
+</html>
+
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 4:58:20 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <form action="logic.jsp" method="post">
+            <input type="text" placeholder="Enter num1" name="t1"/></br>
+            <input type="text" placeholder="Enter num2" name="t2"/></br>
+            <input type="Submit" value="Result"/></br>
+        </form>
+       
+                
+      
+    </body>
+</html>
+
+//logic.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 4:58:20 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <form action="logic.jsp" method="post">
+            <input type="text" placeholder="Enter num1" name="t1"/></br>
+            <input type="text" placeholder="Enter num2" name="t2"/></br>
+            <input type="Submit" value="Result"/></br>
+        </form>
+       
+                
+      
+    </body>
+</html>
+------------------------------------------------------------------------------------
+
+7.
+//error.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 4:58:20 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <form action="logic.jsp" method="post">
+            <input type="text" placeholder="Enter num1" name="t1"/></br>
+            <input type="text" placeholder="Enter num2" name="t2"/></br>
+            <input type="Submit" value="Result"/></br>
+        </form>
+       
+                
+      
+    </body>
+</html>
+
+///index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 4:58:20 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <form action="logic.jsp" method="post">
+            <input type="text" placeholder="Enter num1" name="t1"/></br>
+            <input type="text" placeholder="Enter num2" name="t2"/></br>
+            <input type="Submit" value="Result"/></br>
+        </form>
+       
+                
+      
+    </body>
+</html>
+
+//index.html
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 4:58:20 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+    </head>
+    <body>
+        <form action="logic.jsp" method="post">
+            <input type="text" placeholder="Enter num1" name="t1"/></br>
+            <input type="text" placeholder="Enter num2" name="t2"/></br>
+            <input type="Submit" value="Result"/></br>
+        </form>
+       
+                
+      
+    </body>
+</html>
+-------------------------------------------------------------------------------------
+8.
+//Demo.jsp
+
+<%-- 
+    Document   : Demo
+    Created on : 23-Feb-2022, 10:16:57 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.Locale" %>
+<%@ page import="javax.servlet.*,javax.servlet.http.* "%>
+<%@ page import="java.text.NumberFormat,java.util.Date" %>
+<%@ page import="java.text.DateFormat,java.util.Date" %>
+
+<%
+   //Get the client's Locale
+   Locale locale = request.getLocale();
+   String language = locale.getLanguage();
+   String country = locale.getCountry();
+
+   String title = "Locale Specific Dates";
+   //Get the client's Locale
+   String date = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT, locale).format(new Date( ));
+  
+   NumberFormat nft = NumberFormat.getCurrencyInstance(locale);
+   String formattedCurr = nft.format(500);
+%>
+<html>
+    <head>
+        <title>Detecting Locale</title>
+    </head>
+    <body>
+        <form>
+            <fieldset style="width:20%; background-color:#e6ffe6;">
+                <center>
+                    <h1>Detecting Locale</h1>
+                </center>
+                <p align="center">
+                <%
+                    out.println("Language : " + language  + "<br />");
+                    out.println("Country  : " + country   + "<br />");
+                %>
+                </p>
+                <div align="center">
+                    <h1><% out.print(title); %></h1>
+                    <p>Local Date: <%  out.print(date); %></p>
+                    <p>Formatted Currency: <%  out.print(formattedCurr); %></p>
+                </div>
+            </fieldset>
+        </form>
+    </body>
+</html>
+
+
+//index.jsp
+
+<%-- 
+    Document   : Demo
+    Created on : 23-Feb-2022, 10:16:57 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page import="java.io.*,java.util.Locale" %>
+<%@ page import="javax.servlet.*,javax.servlet.http.* "%>
+<%@ page import="java.text.NumberFormat,java.util.Date" %>
+<%@ page import="java.text.DateFormat,java.util.Date" %>
+
+<%
+   //Get the client's Locale
+   Locale locale = request.getLocale();
+   String language = locale.getLanguage();
+   String country = locale.getCountry();
+
+   String title = "Locale Specific Dates";
+   //Get the client's Locale
+   String date = DateFormat.getDateTimeInstance(DateFormat.FULL, DateFormat.SHORT, locale).format(new Date( ));
+  
+   NumberFormat nft = NumberFormat.getCurrencyInstance(locale);
+   String formattedCurr = nft.format(500);
+%>
+<html>
+    <head>
+        <title>Detecting Locale</title>
+    </head>
+    <body>
+        <form>
+            <fieldset style="width:20%; background-color:#e6ffe6;">
+                <center>
+                    <h1>Detecting Locale</h1>
+                </center>
+                <p align="center">
+                <%
+                    out.println("Language : " + language  + "<br />");
+                    out.println("Country  : " + country   + "<br />");
+                %>
+                </p>
+                <div align="center">
+                    <h1><% out.print(title); %></h1>
+                    <p>Local Date: <%  out.print(date); %></p>
+                    <p>Formatted Currency: <%  out.print(formattedCurr); %></p>
+                </div>
+            </fieldset>
+        </form>
+    </body>
+</html>
+
+
+----------------------------------------------------------------------------------------------------------
+9.
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 23-Feb-2022, 10:19:18 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@ page language="java"%>
+<%@ page import="java.util.Date" %>
+<!DOCTYPE html>
+    <head>
+        <title>Index JSP Page</title>
+    </head>
+    <body>
+
+        <%-- out object example --%>
+
+        <table border="1"; style="background-color:#ffffcc; width:30%" >
+            <caption><h3>JSP Implicit object</h3></caption>
+            <tr><td><b>Current Time</b></td>
+            <td><% out.print(new Date()); %></td></tr>
+
+            <%-- response object example --%>
+            <%response.addCookie(new Cookie("Test","Value")); %>
+
+            <%-- application object example --%>
+            <tr><td><b>User context param value</b></td>
+            <td><%=application.getInitParameter("User") %></td></tr>
+
+            <%-- session object example --%>
+            <tr><td><b>User Session ID</b></td>
+            <td><%=session.getId() %></td></tr>
+
+            <%-- pageContext object example --%>
+            <% pageContext.setAttribute("Test", "Test Value"); %>
+            <tr><td><b>PageContext attribute</b></td>
+            <td>{Name="Test",Value="<%=pageContext.getAttribute("Test") %>"}</td></tr>
+
+            <%-- page object example --%>
+            <tr><td><b>Generated Servlet Name</b>:</td>
+            <td><%=page.getClass().getName() %></td></tr>
+    
+            <%-- request object example --%>
+            <tr><td><b>Request User-Agent</b></td>
+            <td> <%=request.getHeader("User-Agent") %></td></tr>
+        </table>
+    </body>
+</html>
+
+
+-----------------------------------------------------------------------------------------------------------
+10.
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 24-Feb-2022, 12:25:46 PM
+    Author     : Gaurav
+--%>
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"><!-- comment -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script><!-- comment -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script><!-- comment -->
+    </head>
+    <body>
+        <div class="container">
+            <div class=""row">
+                <div>
+                    <form action="login.jsp" method="post">
+                        <div class="form-group">
+                            <h2>Login</h2>
+                        </div>
+                        <div class="form-group">
+                            <label>UserName</label>
+                            <input type="text" id="uname" name="uname" class="form-control">
+                        </div>
+                         <div class="form-group">
+                            <label>Password</label>
+                            <input type="password" id="pass" name="pass" class="form-control">
+                         </div><!-- comment -->
+                          <div class="form-group">
+                              <button type="submit" class="btn-btn-success">Submit</button>
+                          </div><!-- comment -->
+                    </form>>
+                </div>
+                </div>
+                </div>
+    </body>
+</html>
+
+//login.jsp
+
+<%
+
+String uname=request.getParameter("uname");
+String password=request.getParameter("pass");
+if(uname.equals("Jeegyasa") && password.equals("12345"))
+{
+out.println("Login success!!");
+}
+else
+{
+out.println("Login Failed");
+}
+
+
+
+%>
+--------------------------------------------------------------------------------------------------------------------------------
+
+11.
+//index.jsp
+
+<%-- 
+    Document   : index
+    Created on : 24-Feb-2022, 12:46:02 PM
+    Author     : Gaurav
+--%>
+
+<%@page import="java.sql.DriverManager"%>
+<%@page import="java.sql.ResultSet"%>
+<%@page import="java.sql.PreparedStatement"%>
+<%@page import="java.sql.Connection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>JSP Page</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous"><!-- comment -->
+    </head>
+    <body>
+        
+        <div class="container">
+            <div class="form-group col-12 p-0">
+             <%
+                Connection con;
+                PreparedStatement pst;
+                ResultSet rs;
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://localhost/first","root","");
+                String empid = request.getParameter("empid");
+                 out.print("<h3>Employee Details</h3>");
+                if (empid == null || empid.isEmpty())
+                {
+                  pst = con.prepareStatement("select * from employee");
+                  rs = pst.executeQuery();
+                  
+                 while(rs.next())
+                 {    
+                     out.print("<Table border=1 bgcolor=yellow cellpadding=2 cellspacing=2>");
+                     out.print("<TR>");
+                     out.print("<TD>" + rs.getString("name") + "<TD>");
+                     out.print("<TD>" + rs.getString("phone") + "<TD>");
+                     out.print("<TD>" + rs.getString("salary") + "<TD>");
+                     out.print("</TR>");
+                      out.print("</Table>");
+                 }  
+                }
+               else {
+                pst = con.prepareStatement("select * from employee where id =?");
+                pst.setString(1, empid);
+                rs = pst.executeQuery();
+                 while(rs.next())
+                 {  
+                     out.print("<Table border=1 bgcolor=yellow>");
+                     out.print("<TR>");
+                     out.print("<TD>" + rs.getString("name") + "<TD>");
+                     out.print("<TD>" + rs.getString("phone") + "<TD>");
+                     out.print("<TD>" + rs.getString("salary") + "<TD>");
+                     out.print("</TR>");
+                      out.print("</Table>");
+                 }
+                }
+              %>                  
+  <body>
+        <div class="container">
+             <div class="form-group col-6 p-0">
+                 <form id="form" method="post" action="index.jsp" class="form-horizontal">
+                       <div class="form-group col-md-6">
+                           <label>Employee ID</label>
+       <input type="text" name="empid" class="form-control" id="empid" placeholder="Employee ID">
+                        </div>
+                      <div class="form-group col-md-6" align="center">
+ 
+                        <Button class="btn btn-success" style="width: 80px;">Submit</Button>
+              
+                        </div>
+                    
+                 </form>
+                
+             </div>
+         </div>
+    </body>
+</html>
+---------------------------------------------------------------------------------------------------------------------------------------
+12.
+//index.html
+
+<!DOCTYPE html>
+<html>
+     <body>
+          <form method=get action="test.jsp">
+               Enter Any Number : <input type=text name=num><br><br>
+               <input type=submit value="Display">
+          </form>
+     </body>
+</html>
+
+//test.jsp
+
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+    <body>
+       <font color=red>
+          <%! int i,n;
+               String s1;
+          %>
+          <%   s1= request.getParameter("num");
+               n=s1.length();
+               i=0;
+               do
+               {
+                    char ch=s1.charAt(i);
+                    switch(ch)
+                    {
+                         case '0': out.println("Zero  ");
+                              break;
+                         case '1': out.println("One  ");
+                              break;
+                         case '2': out.println("Two  ");
+                              break;
+                         case '3': out.println("Three  ");
+                              break;
+                         case '4': out.println("Four ");
+                              break;
+                         case '5': out.println("Five  ");
+                              break;
+                         case '6': out.println("Six  ");
+                              break;
+                         case '7': out.println("Seven  ");
+                              break;
+                         case '8': out.println("Eight  ");
+                              break;
+                         case '9': out.println("Nine  ");
+                              break;
+                    }
+                    i++;
+               }
+               while(i<n);
+          %>
+       </font>
+   </body>
+</html>
+
+------------------------------------------------------------------------------------------
+
+
+
+//index.html
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       
+          </head>
+    <body>
+        <form action="FirstServlet" method="post">
+               <fieldset style="width:20%; background-color:#ccffcc">
+                    <h2 align="center">Login Page</h2>
+                    <hr>
+                    <table>
+                    <tr><td>Name</td><td><input type="text" name="uname"/></td>
+                    <tr><td>Password</td><td><input type="password" name="pass"/></td></tr>
+                    <tr><td></td><td><input type="submit" value="login"/></td></tr><br>
+                    </table>
+               </fieldset>
+          </form>
+       If not registered ? <a href="index2.html" >Register</a>
+
+
+      
+    </body>
+</html>
+
+//index2.html
+
+<html>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <form action="Register" method="post">
+               <fieldset style="width:20%; background-color:#ccffcc">
+                    <h1 align="center">Registration Page</h1>
+                     			<table style="with: 50%">
+				<tr>
+					<td>First Name</td>
+					<td><input type="text" name="fname" /></td>
+				</tr>
+				<tr>
+					<td>Last Name</td>
+					<td><input type="text" name="lname" /></td>
+				</tr>
+				<tr>
+					<td>UserName</td>
+					<td><input type="text" name="uname" /></td>
+				</tr>
+					<tr>
+					<td>Password</td>
+					<td><input type="password" name="pass" /></td>
+				</tr>
+				<tr>
+					<td>Address</td>
+					<td><input type="text" name="address" /></td>
+				</tr>
+				<tr>
+					<td>Contact No</td>
+					<td><input type="text" name="contact" /></td>
+				</tr></table>
+			<input type="submit" value="Submit" /></form>
+
+                    
+               </fieldset>
+          </form>
+    </body>
+</html>
+
+
+//FirstServlet.java
+
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.RequestDispatcher;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+  
+public class FirstServlet extends HttpServlet
+{
+     public void doPost(HttpServletRequest request, HttpServletResponse response)  
+     throws ServletException, IOException
+     {  
+          response.setContentType("text/html");  
+          PrintWriter out = response.getWriter();  
+          
+          String n=request.getParameter("uname");  
+          String p=request.getParameter("pass");  
+          if(LoginDao.validate(n, p))
+          {  
+               RequestDispatcher rd=request.getRequestDispatcher("WelcomeServlet");  
+               rd.forward(request,response);  
+          }  
+          else
+          {  
+               out.print("Sorry username or password error");  
+               RequestDispatcher rd=request.getRequestDispatcher("index.html");  
+               rd.include(request,response);  
+          }  
+          out.close();  
+     }  
+}
+
+//LoginDao.java
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+
+public class LoginDao {
+     public static boolean validate(String uname,String pass)
+     {  
+          boolean status=false;
+          try
+          {  
+               Class.forName("com.mysql.jdbc.Driver");
+          Connection con = DriverManager.getConnection("jdbc:mysql://localhost/first", "root", "");
+               PreparedStatement ps=con.prepareStatement(  
+               "select * from userlist where uname=? and pass=?");  
+               ps.setString(1,uname);  
+               ps.setString(2,pass);  
+               ResultSet rs=ps.executeQuery();  
+               status=rs.next();  
+          }
+          catch(Exception e)
+          {
+               System.out.println(e);
+          }  
+          return status;  
+     }
+}
+
+//Register.java
+
+public class Register extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+       
+    
+     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO Auto-generated method stub
+                
+        response.setContentType("text/html");   
+         PrintWriter out = response.getWriter();
+            String fname=request.getParameter("fname");
+            String lname=request.getParameter("lname");
+            String uname=request.getParameter("uname");
+            String pass=request.getParameter("pass");
+            String address=request.getParameter("address");   
+            String contact=request.getParameter("contact");  
+            
+            RegisterModel e1=new RegisterModel();
+            e1.setFname(fname);
+            e1.setLname(lname);
+            e1.setUname(uname);
+            e1.setPass(pass);
+            e1.setAddress(address);     
+             e1.setContact(contact);  
+            
+           int status=RegisterDao.save(e1);
+		
+		if(status>0){
+                out.print("<p>Record saved successfully!</p>");
+                request.getRequestDispatcher("index.html").include(request, response);
+            }else{
+                out.println("Sorry! unable to save record");
+            }
+            out.close();
+	}
+
+}
+
+//RegisterDao.java
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+
+
+public class RegisterDao {
+    
+    public static Connection getConnection() {
+        Connection conn = null;
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost/first", "root", "");
+        } catch (Exception e) {
+        }
+        return conn;
+    }
+
+  public static int save(RegisterModel e1){     
+        int status=0;   
+        try{    
+            Connection con1=RegisterDao.getConnection();     
+            PreparedStatement ps1=con1.prepareStatement("insert into userlist(fname,lname,uname,pass,address,contact) values (?,?,?,?,?,?)");    
+            ps1.setString(1,e1.getFname());   
+            ps1.setString(2,e1.getLname());     
+            ps1.setString(3,e1.getUname());      
+            ps1.setString(4,e1.getPass());   
+            ps1.setString(5,e1.getAddress());    
+            ps1.setString(5,e1.getContact()); 
+                
+            status=ps1.executeUpdate();     
+                
+            con1.close();   
+        }   
+        catch(Exception ex1)    
+        {   
+            ex1.printStackTrace();  
+        }   
+            
+        return status;      
+    }  
+}
+
+//RegisterModel.java
+
+public class RegisterModel {
+    String fname,lname,uname,pass,address,contact;
+
+    public String getFname() {
+        return fname;
+    }
+
+    public void setFname(String fname) {
+        this.fname = fname;
+    }
+
+    public String getLname() {
+        return lname;
+    }
+
+    public void setLname(String lname) {
+        this.lname = lname;
+    }
+
+    public String getUname() {
+        return uname;
+    }
+
+    public void setUname(String uname) {
+        this.uname = uname;
+    }
+
+    public String getPass() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass = pass;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getContact() {
+        return contact;
+    }
+
+    public void setContact(String contact) {
+        this.contact = contact;
+    }
+    
+}
+
+//WelcomeServlet.java
+
+import java.io.IOException;  
+import java.io.PrintWriter;  
+import javax.servlet.ServletException;  
+import javax.servlet.http.HttpServlet;  
+import javax.servlet.http.HttpServletRequest;  
+import javax.servlet.http.HttpServletResponse;  
+  
+public class WelcomeServlet extends HttpServlet
+{  
+     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
+     {    
+          response.setContentType("text/html");  
+          PrintWriter out = response.getWriter();  
+          String n=request.getParameter("uname");  
+          out.print("Welcome "+n);  
+          out.close();  
+     }  
+}
+
